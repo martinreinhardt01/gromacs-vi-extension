@@ -1,0 +1,90 @@
+
+The structure, topology and input parameter files used to calculate 
+the solvation free energy of nitrocyclohexane described in the 
+publication 
+
+M. Reinhardt, H. Grubmüller ... arxiv
+
+are provided here. 
+
+*********** Structure **********
+
+The calculations were conducted in two steps, that are provided 
+in the following two folders:
+
+* coulomb_decoupl: In the first step, Coulomb interactions are 
+                   decoupled while LJ interactions are maintainted
+
+* lj_decoupl: In the second step, LJ interactions are decoupled
+              while Coulomb interactions have already been switched
+              off. 
+
+As a comparison, the calculations were firstly conducted with the 
+newly implemented Varitaionally Derived Intermediates (VI) method. 
+The required VI control paramters have been described in the 
+publication mentioned above. These can be found in the folder:
+
+* VI 
+
+In addition, the folder 
+
+* pairwise_sc
+
+provides the files that were used as a comparison withe the 
+conventional soft-core paths.
+
+************ Files **********
+
+* mol.top, mol.gro: topology and structure file of nitrocyclohexane
+                    in water. These were obtained from the solvation
+                    toolkit package from 
+                    Caitlin C. Bannan, Gaetano Calabró, Daisy Y. Kyu, 
+                    and David L. Mobley
+                    J Chem Theory Comput. 2016 Aug 9; 12(8): 4015–4024.
+                    DOI: 10.1021/acs.jctc.6b00449
+
+* em_x.mdp, nvt_x.mdp, npt_x.mdp, md_x.mdp:
+           Input paramter files for energy minimization, constant vol-
+           ume equilibration, constant pressure equilibration and 
+           the production runs
+
+************* Usage  ************
+
+For the accuraccy assessments provided in the above publication, 
+the simulations were conducted in five states (and later compared to
+a reference result from 101 states)
+
+To run the free energy calculations in five states, each mdp files 
+needs to be replicated to five files and the paramterer
+init_lambda_state  = 0
+changed to 0 ... 4
+
+For each state, the steps common to (almost) any MD simulations need 
+to be conducted, i.e., energy minimization ...
+To do so, generate the tpr files through, e.g.,
+
+$GMX grompp -f md_0.mdp -c npt_0.gro -p mol.top -t npt_0.cpt -o md_0.tpr -maxwarn 3
+$GMX mdrun -deffnm md_0
+
+were the path to the executable should be set via
+
+$GMX=...path/gromacs-vi-extension/build/bin/gmx
+
+In the end, the free energy difference can be calulcated, e.g., via
+gmx bar -f *.xvg
+
+For a detailed tutorial on how to perform free energy calculations with 
+GROMACS please refer to, for example, the instructive tutorial by
+Justin A. Lemkul
+http://www.mdtutorials.com/gmx/free_energy/index.html
+
+
+
+
+
+
+
+
+
+
+
